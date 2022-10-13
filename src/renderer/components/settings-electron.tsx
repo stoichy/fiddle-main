@@ -151,6 +151,8 @@ export const ElectronSettings = observer(
           <h1>Electron Settings</h1>
           <Callout>{this.renderVersionShowOptions()}</Callout>
           <br />
+          <Callout>{this.filterSection()}</Callout>
+          <br />
           <Callout>
             {this.renderAdvancedButtons()}
             {this.renderTable()}
@@ -165,6 +167,20 @@ export const ElectronSettings = observer(
      * @private
      * @returns {JSX.Element}
      */
+
+    private filterSection(): JSX.Element {
+      const { appState } = this.props;
+      return (
+        <FormGroup inline={true} label="Filters:">
+          <Checkbox
+            checked={appState.showUndownloadedVersions}
+            id="showUndownloadedVersions"
+            label="Not downloaded"
+            onChange={this.handleStateChange}
+          />
+        </FormGroup>
+      );
+    }
     private renderAdvancedButtons(): JSX.Element {
       const { isDownloadingAll, isDeletingAll } = this.state;
       const { isUpdatingElectronVersions } = this.props.appState;
@@ -226,7 +242,7 @@ export const ElectronSettings = observer(
       };
 
       return (
-        <FormGroup label="Include Electron versions:">
+        <FormGroup label="Channels:">
           {Object.values(channels).map((channel) => (
             <Tooltip
               content={`Can't disable channel of selected version (${appState.version})`}
@@ -245,13 +261,7 @@ export const ElectronSettings = observer(
               />
             </Tooltip>
           ))}
-          <Checkbox
-            checked={appState.showUndownloadedVersions}
-            id="showUndownloadedVersions"
-            inline={true}
-            label="Not downloaded"
-            onChange={this.handleStateChange}
-          />
+
           <Tooltip
             content={`Include versions that have reached end-of-life (older than ${getOldestSupportedMajor()}.0.0)`}
             position="bottom"
